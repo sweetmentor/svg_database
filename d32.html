@@ -16,8 +16,15 @@
         let barPadding = 1;
         
         let dataSet = [
-            450, 100, 120, 280, 480, 25, 50, 220, 175, 200, 80, 140, 230, 70, 350, 320, 450, 210, 360, 310];
+            500, 600, 120, 280, 480, 25, 50, 220, 175, 200, 80, 140, 230, 70, 350, 320, 450, 210, 360, 310];
             
+            let scale = d3.scale.linear()
+                .domain([0, 600])
+                .range([0, 500])
+                
+        let colWidth = w / dataSet.length;
+        let barWidth = colWidth - barPadding;
+        
         let mySVG = d3.select("#svg-goes-here")
             .append("svg")
             .attr("height", h)
@@ -28,15 +35,15 @@
         .enter()
         .append("rect")
         .attr("x", function(d, i) {
-            return i * (w / dataSet.length);
+            return i * colWidth;
         })
         .attr("y", function(d) {
-            return h - d;
+            return h - scale(d);
         })
         .attr("height", function(d) {
-            return (d);
+            return scale(d);
         })
-        .attr("width", w / dataSet.length - barPadding);
+        .attr("width", barWidth);
         
     mySVG.selectAll("text")
         .data(dataSet)
@@ -50,10 +57,10 @@
             return d;
         })
         .attr("x", function(d, i) {
-            return i * (w / dataSet.length);
+            return i * colWidth + barWidth / 2;
         })
         .attr("y", function(d) {
-            return h - d + 14;
+            return h - scale(d) + 14;
         });
         
         
