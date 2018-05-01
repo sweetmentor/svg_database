@@ -13,6 +13,7 @@
     <title>Document</title>
 </head>
 <body>
+    <a href="javascript:dc.filterAll(); dc.renderAll();"><strong>Reset All</strong></a>
     <div id="spend-chart"></div>
     <div id="store-chart"></div>
     <div id="state-chart"></div>
@@ -47,13 +48,7 @@
         .group(totalSpendByDate)
         .x(d3.time.scale().domain([minDate, maxDate]))
         .xAxisLabel("Month");
-        
-        
-        
-        
-        
-        
-        
+   
         let nameDim = ndx.dimension(dc.pluck('name'));
         let totalSpend = nameDim.group().reduceSum(dc.pluck('spend'));
         

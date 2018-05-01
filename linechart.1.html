@@ -10,6 +10,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/crossfilter/1.3.12/crossfilter.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/dc/2.1.8/dc.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/queue-async/1.0.7/queue.js"></script>
+    <script type="text/javascript" src="graph1.js"></script>
     <title>Document</title>
 </head>
 <body>
@@ -32,26 +33,7 @@
         
         transactionsData.forEach(function(d) {
             d.date = parseDate(d.date);
-        });
-        
-        let dateDim = ndx.dimension(dc.pluck("date"));
-        let totalSpendByDate = dateDim.group().reduceSum(dc.pluck("spend"));
-        
-        let minDate = dateDim.bottom(1)[0].date;
-        let maxDate = dateDim.top(1)[0].date;
-        let lineSpend = dc.lineChart("#line-chart");
-        
-        lineSpend
-        .width(1000)
-        .height(300)
-        .dimension(dateDim)
-        .group(totalSpendByDate)
-        .x(d3.time.scale().domain([minDate, maxDate]))
-        .xAxisLabel("Month");
-        
-        
-        
-        
+      
         
         
             dc.renderAll(); 
