@@ -10,40 +10,29 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/crossfilter/1.3.12/crossfilter.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/dc/2.1.8/dc.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/queue-async/1.0.7/queue.js"></script>
-    <script type="text/javascript" src="graph1.js"></script>
+    
     <title>Document</title>
 </head>
 <body>
     <h1>Data Visualisation</h1>
-    <h2>Custom Pie Chart</h2>
+    <h2>Male - Female Pie Chart</h2>
     
-    <a href="javascript:dc.filterAll(); dc.renderAll();"><strong>Reset All</strong></a>
-    <div id="spend-chart"></div>
-    <div id="store-chart"></div>
-    <div id="state-chart"></div>
-    <div id="line-chart"></div>
-    
-    
-    <script>
-        queue()
-        .defer(d3.json, "data/transactions.json")
-        .await(makeCharts);
-    
-    function makeCharts(error, transactionsData) {
+    <div>
+        <h3>Rank</h3>
+        <div id="male-female-Piechart"></div>
+        <div id="rankChart"></div>
+    </div>
+    <script src="graph3.js">
         
-        let ndx = crossfilter(transactionsData);
-        let parseDate = d3.time.format("%d/%m/%Y").parse;
-        
-        transactionsData.forEach(function(d) {
-            d.date = parseDate(d.date);
       
         
         
-            dc.renderAll(); 
         
-    }
+        
         
     </script>
+    
+    
     
 </body>
 </html>
