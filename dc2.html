@@ -16,6 +16,7 @@
     <div id="spend-chart"></div>
     <div id="store-chart"></div>
     <div id="state-chart"></div>
+    <div id="line-chart"></div>
     
     
     <script>
@@ -24,8 +25,34 @@
         .await(makeCharts);
     
     function makeCharts(error, transactionsData) {
-        
         let ndx = crossfilter(transactionsData);
+        
+        let parseDate = d3.time.format("%d/%m/%Y").parse;
+        
+        transactionsData.forEach(function(d) {
+            d.date = parseDate(d.date);
+        });
+        
+        let dateDim = ndx.dimension(dc.pluck("date"));
+        let totalSpendByDate = dateDim.group().reduceSum(dc.pluck("spend"));
+        
+        let minDate = dateDim.bottom(1)[0].date;
+        let maxDate = dateDim.top(1)[0].date;
+        let lineSpend = dc.lineChart("#line-chart");
+        
+        lineSpend
+        .width(1000)
+        .height(300)
+        .dimension(dateDim)
+        .group(totalSpendByDate)
+        .x(d3.time.scale().domain([minDate, maxDate]))
+        .xAxisLabel("Month");
+        
+        
+        
+        
+        
+        
         
         let nameDim = ndx.dimension(dc.pluck('name'));
         let totalSpend = nameDim.group().reduceSum(dc.pluck('spend'));
@@ -45,6 +72,8 @@
         let storeDim = ndx.dimension(dc.pluck("store"));
         let totalSpendByStore = storeDim.group().reduceSum(dc.pluck("spend"));
         
+        
+        
         let storeChart = dc.barChart("#store-chart");
         
         storeChart
@@ -58,19 +87,29 @@
         .yAxis().ticks(4);
         
         let stateDim = ndx.dimension(dc.pluck("state"));
+        /*let stateDim = ndx.dimension(function(d){
+            // return d.state;
+            console.log(d.state);
+            return (d.state)
+        }) */
         let totalSpendByState = stateDim.group().reduceSum(dc.pluck("spend"));
-        
-        let stateChart = dc.barChart("#state-chart");
-        
-        stateChart
-        .width(300)
-        .height(150)
+        dc.pieChart("#state-chart")
+        .height(300)
+        .radius(100)
         .dimension(stateDim)
         .group(totalSpendByState)
-        .x(d3.scale.ordinal())
-        .xUnits(dc.units.ordinal)
-        .xAxisLabel("Name of state")
-        .yAxis().ticks(4);
+        
+        //let stateChart = dc.barChart("#state-chart");
+        
+        // stateChart
+        // .width(300)
+        // .height(150)
+        // .dimension(stateDim)
+        // .group(totalSpendByState)
+        // .x(d3.scale.ordinal())
+        // .xUnits(dc.units.ordinal)
+        // .xAxisLabel("Name of state")
+        // .yAxis().ticks(4);
         
         
     dc.renderAll(); 
