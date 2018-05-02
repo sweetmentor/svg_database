@@ -51,7 +51,7 @@ function makeGraph(error, SalariesData) {
         .group(totalPeople);
 
     let yrsServiceDim = ndx.dimension(function(d){
-        return +d["yrs.service"];
+        return +d["yrs_service"];
     });
     let totalSalary = yrsServiceDim.group().reduce(
                 function(p, v) {
@@ -86,7 +86,7 @@ function makeGraph(error, SalariesData) {
         .group(totalSalary)
         .x(d3.scale.ordinal())
         .xUnits(dc.units.ordinal)
-        .xAxisLabel("Store")
+        .xAxisLabel("Year Service")
         .valueAccessor(function(p) {
                     return p.value.average;
                 })
@@ -95,6 +95,78 @@ function makeGraph(error, SalariesData) {
         })
 		.colors(barColors)
         .yAxis().ticks(4);
+
+/*--------------*/
+
+let yearsServiceDim = ndx.dimension(dc.pluck("yrs_service"));
+
+
+    let profSalary = yearsServiceDim.group().reduceSum(function(d) {
+        if (d.rank === "Prof") {
+            return +d.salary;
+        }
+        else {
+            return 0;
+        }
+    })
+
+     let assisProfSalary = yearsServiceDim.group().reduceSum(function(d) {
+        if (d.rank === "AsstProf") {
+            return +d.salary;
+        }
+        else {
+            return 0;
+        }
+    })
+
+     let assocProfSalary = yearsServiceDim.group().reduceSum(function(d) {
+        if (d.rank === "AssocProf") {
+            return +d.salary;
+        }
+        else {
+            return 0;
+        }
+    })
+
+    let compositeChart = dc.compositeChart("#composite-chart")
+
+    compositeChart
+        .width(1000)
+        .height(200)
+        .dimension(yearsServiceDim)
+        .group(profSalary)
+        .xUnits(dc.units.ordinal
+        )
+        .x(d3.scale.ordinal())
+        .yAxisLabel("Spend")
+        .legend(dc.legend().x(80).y(20).itemHeight(13).gap(5))
+        .renderHorizontalGridLines(true)
+        .compose([
+            dc.lineChart(compositeChart)
+            .colors("green")
+            .group(profSalary, "Prof"),
+            dc.lineChart(compositeChart)
+            .colors("red")
+            .group(assisProfSalary, "AssisProf"),
+            dc.lineChart(compositeChart)
+            .colors("blue")
+            .group(assocProfSalary, "AssocProf")
+
+        ])
+        .render();
+  
+
+
+
+
+
+
+
+
+
+
+
+
 
 
     dc.renderAll()
