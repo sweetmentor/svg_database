@@ -20,7 +20,7 @@ function makeGraph(error, transactionsData) {
     let spendGroup = nameDim.group().reduceSum(dc.pluck("spend"));
     
     let spendChart = dc.barChart("#spend-chart");
-    
+    let barColors = d3.scale.ordinal().range(["red","blue","green","yellow"]);
     spendChart
     .width(500)
     .height(300)
